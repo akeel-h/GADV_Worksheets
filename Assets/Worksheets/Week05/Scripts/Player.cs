@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         controller.detectCollisions = false;
+        CheckLineOfSight();
     }
 
     void CheckExplosion()
@@ -54,6 +55,27 @@ public class Player : MonoBehaviour
             }
         }
     }
+
+    void CheckLineOfSight()
+    {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        RaycastHit hit;
+
+        foreach (GameObject enemy in enemies)
+        {
+            Vector3 vec = enemy.transform.position - transform.position;
+            Debug.DrawRay(transform.position, vec, Color.red);
+
+            if (Physics.Raycast(transform.position, vec, out hit, 30f))
+            {
+                if (hit.transform.gameObject == enemy)
+                {
+                    enemy.GetComponent<Renderer>().material.color = Color.green;
+                }
+            }
+        }
+    }
+
 
 
     void FixedUpdate()
